@@ -45,8 +45,8 @@ public class EmployeeController {
         if (emp==null)  return R.error("登陆失败");
 
         //密码对比, 如果不一致则返回登陆失败结果
-            //password: 页面提交的用户密码
-            //emp.getPassword(): 数据库中的用户密码
+        //password: 页面提交的用户密码
+        //emp.getPassword(): 数据库中的用户密码
         if (!emp.getPassword().equals(password))  return R.error("登陆失败");
 
         //查看员工状态, 如果为已禁用状态, 则返回员工已禁用结果
@@ -55,5 +55,17 @@ public class EmployeeController {
         //登陆成功, 将员工id存入session并返回登陆成功结果
         request.getSession().setAttribute("employee", emp.getId());
         return R.success(emp);
+    }
+
+    /**
+     * 员工退出
+     * @param request
+     * @return
+     */
+    @PostMapping("/logout")
+    public R<String> logout(HttpServletRequest request){
+        //清理session中保存的当前登录用户的id
+        request.getSession().removeAttribute("employee");
+        return R.success("退出成功");
     }
 }
