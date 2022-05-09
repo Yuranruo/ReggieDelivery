@@ -8,6 +8,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reggie.common.R;
 import reggie.entity.Employee;
 import reggie.service.EmployeeService;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/employee")
 public class EmployeeController {
 
