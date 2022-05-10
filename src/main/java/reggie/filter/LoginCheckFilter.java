@@ -23,13 +23,13 @@ public class LoginCheckFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest)servletRequest;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         //获取本次请求的URI
         String requestURI = request.getRequestURI();
 
-        log.info("拦截到请求：{}",requestURI);
+        log.info("拦截到请求：{}", requestURI);
 
         //定义不需要处理的请求路径
         String[] uris = new String[]{
@@ -43,15 +43,15 @@ public class LoginCheckFilter implements Filter {
         boolean check = check(uris, requestURI);
 
         //如果不需要处理, 则直接放行
-        if (check){
-            log.info("本次请求{}不需要处理",requestURI);
+        if (check) {
+            log.info("本次请求{}不需要处理", requestURI);
             filterChain.doFilter(request, response);
             return;
         }
 
         //判断登陆状态, 如果已登录, 则直接放行
-        if(request.getSession().getAttribute("employee") != null){
-            log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("employee"));
+        if (request.getSession().getAttribute("employee") != null) {
+            log.info("用户已登录，用户id为：{}", request.getSession().getAttribute("employee"));
             filterChain.doFilter(request, response);
             return;
         }
@@ -68,14 +68,15 @@ public class LoginCheckFilter implements Filter {
 
     /**
      * 路径匹配, 检查本次请求是否需要放行
+     *
      * @param urls
      * @param requestURI
      * @return
      */
-    public boolean check(String[] urls, String requestURI){
-        for(String url:urls){
+    public boolean check(String[] urls, String requestURI) {
+        for (String url : urls) {
             boolean match = PATH_MATCHER.match(url, requestURI);
-            if (match)  return true;
+            if (match) return true;
         }
         return false;
     }

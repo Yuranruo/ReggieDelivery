@@ -26,12 +26,13 @@ public class EmployeeController {
 
     /**
      * 员工登录
+     *
      * @param request
      * @param employee
      * @return
      */
     @PostMapping("/login")
-    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee){
+    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
         //将页面提交的密码进行md5加密处理
         String password = employee.getPassword();
         password = DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8));
@@ -42,15 +43,15 @@ public class EmployeeController {
         Employee emp = employeeService.getOne(queryWrapper);
 
         //如果没有查询到则返回登陆失败结果
-        if (emp==null)  return R.error("登陆失败");
+        if (emp == null) return R.error("登陆失败");
 
         //密码对比, 如果不一致则返回登陆失败结果
         //password: 页面提交的用户密码
         //emp.getPassword(): 数据库中的用户密码
-        if (!emp.getPassword().equals(password))  return R.error("登陆失败");
+        if (!emp.getPassword().equals(password)) return R.error("登陆失败");
 
         //查看员工状态, 如果为已禁用状态, 则返回员工已禁用结果
-        if (emp.getStatus()==0) return R.error("账号已禁用");
+        if (emp.getStatus() == 0) return R.error("账号已禁用");
 
         //登陆成功, 将员工id存入session并返回登陆成功结果
         request.getSession().setAttribute("employee", emp.getId());
@@ -59,11 +60,12 @@ public class EmployeeController {
 
     /**
      * 员工退出
+     *
      * @param request
      * @return
      */
     @PostMapping("/logout")
-    public R<String> logout(HttpServletRequest request){
+    public R<String> logout(HttpServletRequest request) {
         //清理session中保存的当前登录用户的id
         request.getSession().removeAttribute("employee");
         return R.success("退出成功");
@@ -71,11 +73,12 @@ public class EmployeeController {
 
     /**
      * 新增员工
+     *
      * @param employee
      * @return
      */
     @PostMapping
-    public R<String> save(HttpServletRequest request, @RequestBody Employee employee){
+    public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
         log.info("新增员工, 员工信息: {}", employee.toString());
 
         //设置初始密码123456, 需要进行md5加密处理
@@ -100,13 +103,14 @@ public class EmployeeController {
 
     /**
      * 员工信息分页查询
+     *
      * @param page
      * @param pageSize
      * @param name
      * @return
      */
     @GetMapping("/page")
-    public R<Page> page(int page, int pageSize, String name){
+    public R<Page> page(int page, int pageSize, String name) {
         log.info("page = {}, pageSize = {}, name = {}", page, pageSize, name);
 
         //构造分页构造器
