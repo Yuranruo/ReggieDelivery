@@ -145,4 +145,21 @@ public class EmployeeController {
 
         return R.success("员工信息修改成功");
     }
+
+    /**
+     * 根据id获取员工信息
+     * 变量在url路径里的, 要在注解中使用"/{id}"来截取值, 并在函数的参数中加上@PathVariable
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R<Employee> getById(@PathVariable Long id) {
+        log.info("根据id查询员工信息");
+
+        Employee employee = employeeService.getById(id);
+        if (employee != null)
+            return R.success(employee);
+        else return R.error("未查询到对应用户信息");
+    }
 }
