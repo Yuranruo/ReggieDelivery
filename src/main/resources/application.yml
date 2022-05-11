@@ -18,3 +18,6 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: ASSIGN_ID
+#配置图片存储路径
+reggie:
+  path: D:\img\
