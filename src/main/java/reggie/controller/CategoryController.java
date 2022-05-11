@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +64,22 @@ public class CategoryController {
         categoryService.page(pageInfo, queryWrapper);
 
         return R.success(pageInfo);
+    }
+
+    /**
+     * 根据id删除分类
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public R<String> delete(Long ids) {
+        log.info("要删除的id为: {}", ids);
+
+//        categoryService.removeById(ids);
+        categoryService.remove(ids);
+
+        return R.success("分类信息删除成功");
     }
 
 }
