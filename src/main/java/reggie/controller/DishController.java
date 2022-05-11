@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reggie.common.R;
+import reggie.dto.DishDto;
 import reggie.entity.Category;
 import reggie.entity.Dish;
+import reggie.service.CategoryService;
 import reggie.service.DishFlavorService;
 import reggie.service.DishService;
 
@@ -45,6 +45,22 @@ public class DishController {
         dishService.page(pageInfo, queryWrapper);
 
         return R.success(pageInfo);
+    }
+
+    /**
+     * 新增菜品
+     *
+     * @param dishDto
+     * @return
+     */
+    @PostMapping
+    public R<String> save(@RequestBody DishDto dishDto) {
+        log.info("新增分类, 分类信息: {}", dishDto.toString());
+
+        //保存分类
+        dishService.saveWithFlaver(dishDto);
+
+        return R.success("新增菜品成功");
     }
 
 }
