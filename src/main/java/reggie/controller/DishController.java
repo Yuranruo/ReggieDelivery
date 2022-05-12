@@ -11,7 +11,10 @@ import reggie.common.R;
 import reggie.dto.DishDto;
 import reggie.entity.Category;
 import reggie.entity.Dish;
+import reggie.entity.DishFlavor;
+import reggie.entity.Employee;
 import reggie.service.CategoryService;
+import reggie.service.DishFlavorService;
 import reggie.service.DishService;
 
 import java.util.List;
@@ -24,6 +27,8 @@ public class DishController {
 
     @Autowired
     private DishService dishService;
+    @Autowired
+    private DishFlavorService dishFlavorService;
     @Autowired
     private CategoryService categoryService;
 
@@ -46,7 +51,7 @@ public class DishController {
         //构造条件构造器: 过滤条件，排序条件
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(name), Dish::getName, name);
-        queryWrapper.orderByAsc(Dish::getUpdateTime);
+        queryWrapper.orderByDesc(Dish::getUpdateTime);
 
         //查询所有菜品
         dishService.page(pageInfo, queryWrapper);
@@ -93,6 +98,37 @@ public class DishController {
         dishService.saveWithFlaver(dishDto);
 
         return R.success("新增菜品成功");
+    }
+
+    /**
+     * 根据id修改分类信息
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R<DishDto> get(@PathVariable Long id) {
+        log.info("根据id修改分类信息");
+
+        DishDto dishDto = dishService.getByIdWithFlavor(id);
+
+        return R.success(dishDto);
+    }
+
+    /**
+     * 更新菜品
+     *
+     * @param dishDto
+     * @return
+     */
+    @PutMapping
+    public R<String> update(@RequestBody DishDto dishDto) {
+        log.info("新增分类, 分类信息: {}", dishDto.toString());
+
+        //保存分类
+        dishService.updateWithFlaver(dishDto);
+
+        return R.success("更新菜品成功");
     }
 
 }
