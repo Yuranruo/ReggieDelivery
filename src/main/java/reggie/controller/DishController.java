@@ -131,4 +131,24 @@ public class DishController {
         return R.success("更新菜品成功");
     }
 
+    /**
+     * 根据条件查询对应菜品数据
+     * 参数用Dish不用Long id的原因是用dish可以传更多类型的数据, 如id, name等
+     *
+     * @param dish
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish) {
+        //构造查询条件和排序条件
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Dish::getStatus, 1);    //仅查询启售的菜品
+        queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+
+        List<Dish> list = dishService.list(queryWrapper);
+
+        return R.success(list);
+    }
+
 }
