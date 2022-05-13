@@ -38,7 +38,9 @@ public class LoginCheckFilter implements Filter {
                 "/employee/logout",
                 "/backend/**",
                 "/front/**",
-                "/common/**"
+                "/common/**",
+                "/user/sendMsg",    //移动端发送短信
+                "/user/login"   //移动端登录
         };
 
         //判断本次请求是否需要处理, 即路径是否在uris中
