@@ -139,7 +139,7 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
-    public R<List<Dish>> list(Dish dish) {
+    public R<List<DishDto>> list(Dish dish) {
         //构造查询条件和排序条件
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Dish::getStatus, 1);    //仅查询启售的菜品
@@ -148,7 +148,32 @@ public class DishController {
 
         List<Dish> list = dishService.list(queryWrapper);
 
-        return R.success(list);
+        //遍历records，使用records中的categoryId到categoryService中查询相应category，并将categoryName放到dishDto中
+        List<DishDto> dishDtoList = list.stream().map((item) -> {
+            DishDto dishDto = new DishDto();   //dishDtoPage需要传入dishDto对象
+            BeanUtils.copyProperties(item, dishDto); //dishDto是空的，需要将刚才查询出来的item放进去
+
+            Long categoryId = item.getCategoryId();
+            Category category = categoryService.getById(categoryId);
+
+            if (category != null) {
+                String categoryName = category.getName();
+                dishDto.setCategoryName(categoryName);
+            }
+
+            //获得id
+            Long itemId = item.getId();
+            //通过id查询口味信息
+            LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(DishFlavor::getDishId, itemId);
+            List<DishFlavor> flavorList = dishFlavorService.list(lambdaQueryWrapper);
+            //将查询出的口味信息保存到dishDto中
+            dishDto.setFlavors(flavorList);
+            return dishDto;
+
+        }).collect(Collectors.toList());
+
+        return R.success(dishDtoList);
     }
 
 }
